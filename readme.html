@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <title>JMX-Http Bridge Plugin Readme</title>
+    <style type="text/css">
+        BODY {
+            font-size: 100%;
+        }
+
+        BODY, TD, TH {
+            font-family: tahoma, verdana, arial, helvetica, sans-serif;
+            font-size: 0.8em;
+        }
+
+        H2 {
+            font-size: 10pt;
+            font-weight: bold;
+        }
+
+        A:hover {
+            text-decoration: none;
+        }
+
+        H1 {
+            font-family: tahoma, arial, helvetica, sans-serif;
+            font-size: 1.4em;
+            font-weight: bold;
+            border-bottom: 1px #ccc solid;
+            padding-bottom: 2px;
+        }
+
+        TT {
+            font-family: courier new;
+            font-weight: bold;
+            color: #060;
+        }
+
+        PRE {
+            font-family: courier new;
+            font-size: 100%;
+        }
+
+        .events TH {
+            font-size: 8pt;
+            font-family: verdana;
+            font-weight: bold;
+            text-align: left;
+            background-color: #eee;
+            border-bottom: 1px #ccc solid;
+        }
+
+        .events .event {
+            font-weight: bold;
+        }
+
+        .events .description {
+            font-size: 8pt;
+            font-family: verdana;
+        }
+
+        .events TD {
+            border-bottom: 1px #ccc dotted;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body>
+    <h1>JMX-Http Bridge Plugin Readme</h1>
+
+    <h2>Overview</h2>
+    <p>
+        The JMX / HTTP Bridge exposes Openfire's JMX interface over HTTP, allowing external monitoring and management tools to access metrics and runtime information without requiring a direct JMX connection.
+        This makes it possible to integrate Openfire with HTTP- or JSON-based monitoring systems, even in environments where traditional JMX access is restricted or unavailable.
+    </p>
+
+    <h2>Features</h2>
+    <ul>
+        <li>Exposes JMX data through a Jolokia-compatible HTTP interface.</li>
+        <li>Provides machine-readable (JSON) responses suitable for integration with tools such as Prometheus, Grafana, or custom dashboards.</li>
+        <li>Adds a configuration page to the Openfire Admin Console for easy setup.</li>
+        <li>Supports authentication and HTTPS for secure access.</li>
+        <li>Exposes all MBeans registered in the running JVM, including those defined by Openfire itself, other Openfire plugins, and third-party extensions.</li>
+    </ul>
+
+    <h2>Installation</h2>
+    <ol>
+        <li>Copy the plugin's JAR file into Openfire's <code>plugins/</code> directory.</li>
+        <li>The plugin will be automatically deployed by Openfire.</li>
+        <li>After installation, a new entry labeled "JMX / HTTP Bridge" will appear in the Admin Console under <em> Server Settings</em>.</li>
+    </ol>
+
+    <h2>Upgrading</h2>
+    <ol>
+        <li>Obtain the new version of the JMX / HTTP Bridge plugin.</li>
+        <li>Replace the existing plugin JAR file in the <code>plugins/</code> directory with the newer version.</li>
+        <li>Openfire will automatically redeploy the updated plugin.</li>
+    </ol>
+
+    <h2>Configuration</h2>
+    <p>
+        The plugin adds a configuration page to the Openfire Admin Console, which allows you to configure:
+    </p>
+    <ul>
+        <li><strong>Network port:</strong> The TCP port on which the embedded webserver will listen for HTTP or HTTPS connections.</li>
+        <li><strong>Authentication:</strong> Whether access to the HTTP interface requires Openfire administrator credentials or a shared secret.</li>
+    </ul>
+
+    <p>
+        For this plugin to be useful, JMX support must be enabled in Openfire.
+        This can be configured on the <em>Server Information</em> page in the Admin Console.
+    </p>
+
+    <h2>Usage</h2>
+    <p>
+        Once enabled, the bridge exposes JMX data over HTTP at the root context path (<code>/</code>) of the embedded webserver.
+        The interface is fully compatible with the <a href="https://jolokia.org/documentation.html" target="_blank">Jolokia API</a>.
+    </p>
+
+    <p>Example endpoints include:</p>
+    <ul>
+        <li><code>GET /</code> - Plugin index page.</li>
+        <li><code>POST /jolokia/</code> - Main Jolokia JSON endpoint.</li>
+        <li><code>GET /jolokia/read/&lt;mbean&gt;/&lt;attribute&gt;</code> - Read MBean attributes.</li>
+        <li><code>GET /health</code> - Simple health check.</li>
+        <li><code>GET /version</code> - Version and runtime info.</li>
+    </ul>
+
+    <p>Example usage with <code>curl</code>:</p>
+    <pre><code>curl -u admin:secret \
+  "https://example.org:9291/jolokia/read/org.igniterealtime.openfire:type=Statistic,name=sessions"</code></pre>
+
+    <p>
+        The Jolokia API is versatile and supports operations such as reading and writing attributes,
+        invoking operations, and listing all available MBeans. Refer to the
+        <a href="https://jolokia.org/reference/html/manual/jolokia_protocol.html" target="_blank">Jolokia documentation</a>
+        for detailed usage examples.
+    </p>
+
+    <h2>Security Considerations</h2>
+    <ul>
+        <li>Access to this interface should be restricted to trusted systems only.</li>
+        <li>Always use HTTPS when exposing JMX data.</li>
+        <li>Do not enable anonymous access to the bridge.</li>
+        <li>Ensure your Openfire authentication and access controls are appropriately configured.</li>
+    </ul>
+
+    <h2>Attribution</h2>
+    <p>
+        <a href="https://www.flaticon.com/free-icons/highway" title="highway icons">Highway icons created by maswan - Flaticon</a>
+    </p>
+</body>
+</html>

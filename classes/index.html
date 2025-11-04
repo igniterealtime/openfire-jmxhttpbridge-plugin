@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Openfire JMX-HTTP Bridge</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            line-height: 1.5;
+            color: #111;
+            padding: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 1px solid #e6e6e6;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.6rem;
+        }
+
+        p.lead {
+            color: #333;
+            margin-top: 8px;
+        }
+
+        section {
+            margin-bottom: 20px;
+        }
+
+        pre {
+            background: #f7f7f8;
+            padding: 12px;
+            border-radius: 6px;
+            overflow: auto;
+            font-size: 0.9rem;
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace;
+            font-size: 0.95em;
+        }
+
+        ul {
+            margin: 8px 0 8px 20px;
+        }
+
+        .note {
+            background: #fff7e6;
+            padding: 10px;
+            border-left: 4px solid #ffb84d;
+            border-radius: 4px;
+        }
+
+        footer {
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            padding-top: 12px;
+            margin-top: 24px;
+        }
+
+        a {
+            color: #0b66c3;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Openfire JMX &rarr; HTTP Bridge</h1>
+    <p class="lead">JMX is a Java technology used for managing and monitoring Java processes. Openfire uses it mainly to
+        expose low-level statistic. This webserver exposes Openfire's JMX MBeans over HTTP (JSON) using a <a
+            href="https://jolokia.org">Jolokia</a>-compatible API surface. It is intended as a minimal,
+        maintenance-friendly bridge so monitoring tools and HTTP-only environments can read JMX data without direct JMX
+        connections.</p>
+</header>
+
+<section>
+    <h2>What this server provides</h2>
+    <ul>
+        <li>HTTP/JSON access to JMX MBeans in the running Openfire instance (via Jolokia).</li>
+        <li>A small, stable API surface that monitoring systems (Prometheus exporters, scripts, dashboards) can poll.</li>
+        <li>Optional integration points for authentication, CORS, and request filtering so you can operate in secure environments.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Primary endpoints</h2>
+    <p>Assuming the plugin is mounted at <code>/</code> on your Openfire admin webserver, typical endpoints are:</p>
+    <ul>
+        <li><code>GET /</code> - This index page (you are here).</li>
+        <li><code>POST /jolokia/</code> - Jolokia JSON POST API (bulk/read/exec requests).</li>
+        <li><code>GET /jolokia/read/&lt;mbean&gt;/&lt;attribute&gt;</code> - Jolokia read by path (simple GET).</li>
+        <li><code>GET /health</code> - Health/status endpoint returning a minimal JSON payload (plugin alive, Jolokia available).</li>
+        <li><code>GET /version</code> - Plugin version and brief runtime info.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Example usage</h2>
+    <p>Basic read of an MBean attribute using <code>curl</code> (GET):</p>
+    <pre><code>curl -u admin:secret \
+  "https://example.org:9291/jolokia/read/org.igniterealtime.openfire:type=Statistic,name=sessions"</code></pre>
+
+    <p>GET-style Jolokia request that reads multiple attributes in one call:</p>
+    <pre><code>curl -u admin:secret \
+  "https://example.org:9291/jolokia/read/org.igniterealtime.openfire:type=Statistic,name=*"</code></pre>
+
+    <p class="note">Refer to the <a href="https://jolokia.org/reference/html/manual/jolokia_protocol.html">Jolokia protocol documentation</a> for additional details.</p>
+
+</section>
+
+<section>
+    <h2>Configuration</h2>
+    <p>The Openfire admin console can be used to configure this bridge.</p>
+</section>
+
+<section>
+    <h2>Authentication & Authorization</h2>
+    <p>This bridge must be treated as sensitive: it exposes internal runtime state. Recommended deployment
+        practices:</p>
+    <ul>
+        <li>Protect endpoints with authentication. Two options are provided: basic authentication and shared secret.
+        </li>
+        <li>Limit access by network (firewall rules, reverse proxy allowlists) so only trusted monitoring hosts can
+            reach the plugin.
+        </li>
+        <li>Prefer TLS (HTTPS) for all traffic. Do not expose this endpoint over plain HTTP on public networks.</li>
+    </ul>
+    <p class="note"><strong>Important:</strong> Do not enable anonymous access to the Jolokia endpoint. By default, the
+        plugin should require authentication.</p>
+</section>
+<footer>
+    <p><strong>License & contact</strong><br>
+        This plugin/index is intended for use with Openfire. Check the plugin's bundled README for licensing and
+        contribution details. If you have questions or find issues, please open a ticket in the Openfire plugin repo or
+        contact the plugin maintainer.</p>
+</footer>
+</body>
+</html>

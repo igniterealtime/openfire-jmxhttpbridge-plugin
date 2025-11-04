@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin>
+    <class>org.igniterealtime.openfire.plugins.jmxhttpbridge.JmxHttpBridgePlugin</class>
+    <name>${project.name}</name>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <licenseType>Apache 2.0</licenseType>    
+    <date>2025-11-03</date>
+    <minServerVersion>5.0.0</minServerVersion>
+    <author>Ignite Realtime</author>
+
+    <csrfProtectionEnabled>true</csrfProtectionEnabled>
+
+    <adminconsole>
+        <tab id="tab-server">
+            <sidebar id="sidebar-server-settings">
+                <item id="jmxhttpbridge-config" name="${admin.sidebar.jmxhttpbridge.config.name}"
+                      url="config.jsp" description="${admin.sidebar.jmxhttpbridge.config.description}"/>
+            </sidebar>
+        </tab>
+
+    </adminconsole>
+
+</plugin>
