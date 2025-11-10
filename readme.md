@@ -1,5 +1,7 @@
 # JMX-HTTP Bridge Plugin
 
+This is a plugin for the Openfire real-time communications server.
+
 ## Overview
 The JMX / HTTP Bridge exposes Openfire's JMX interface over HTTP, allowing external monitoring and management tools to access metrics and runtime information without requiring a direct JMX connection.  
 This makes it possible to integrate Openfire with HTTP- or JSON-based monitoring systems, even in environments where traditional JMX access is restricted or unavailable.
