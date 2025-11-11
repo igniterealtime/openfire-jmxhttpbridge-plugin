@@ -173,6 +173,8 @@ public class StatsWebServer
 
     /**
      * The TCP port that the webserver that is used for Jmx-to-Http bridging will use to listen for HTTP (non-encrypted) requests.
+     *
+     * A non-positive value indicates that the port is to be disabled / not used.
      */
     public static final SystemProperty<Integer> JMXHTTPBRIDGE_WEBSERVER_PORT = SystemProperty.Builder.ofType(Integer.class)
         .setKey("jmxhttpbridge.webserver.port")
@@ -184,6 +186,8 @@ public class StatsWebServer
 
     /**
      * The TCP port that the webserver that is used for Jmx-to-Http bridging will use to listen for HTTPS (encrypted) requests.
+     *
+     * A non-positive value indicates that the port is to be disabled / not used.
      */
     public static final SystemProperty<Integer> JMXHTTPBRIDGE_WEBSERVER_PORT_SECURE = SystemProperty.Builder.ofType(Integer.class)
         .setKey("jmxhttpbridge.webserver.securePort")
