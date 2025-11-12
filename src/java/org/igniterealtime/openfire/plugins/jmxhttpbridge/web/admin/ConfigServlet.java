@@ -130,8 +130,8 @@ public class ConfigServlet extends HttpServlet
     protected void setDefaultAttributes(HttpServletRequest request, HttpServletResponse response)
     {
         request.setAttribute("isJmxEnabled", JMXManager.isEnabled());
-        request.setAttribute("port", StatsWebServer.JMXHTTPBRIDGE_WEBSERVER_PORT.getValue() == -1 ? null : StatsWebServer.JMXHTTPBRIDGE_WEBSERVER_PORT.getValue());
-        request.setAttribute("secureport", StatsWebServer.JMXHTTPBRIDGE_WEBSERVER_PORT_SECURE.getValue() == -1 ? null : StatsWebServer.JMXHTTPBRIDGE_WEBSERVER_PORT_SECURE.getValue());
+        request.setAttribute("port", StatsWebServer.JMXHTTPBRIDGE_WEBSERVER_PORT.getValue() < 0 ? null : StatsWebServer.JMXHTTPBRIDGE_WEBSERVER_PORT.getValue());
+        request.setAttribute("secureport", StatsWebServer.JMXHTTPBRIDGE_WEBSERVER_PORT_SECURE.getValue() < 0 ? null : StatsWebServer.JMXHTTPBRIDGE_WEBSERVER_PORT_SECURE.getValue());
         request.setAttribute("authtype", AuthFilter.JMXHTTPBRIDGE_WEBSERVER_AUTH_TYPE.getValue());
         request.setAttribute("secretvalue", AuthFilter.JMXHTTPBRIDGE_WEBSERVER_AUTH_SECRET.getValue());
     }
