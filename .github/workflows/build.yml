@@ -31,7 +31,7 @@ jobs:
             - name: Run Openfire
               uses: igniterealtime/launch-openfire-action@main
               with:
-                  version: 5.0.2
+                  daily: true
                   config: ./test/demoboot-with-additions.xml
                   plugin: ./jmxhttpbridge.jar
 
